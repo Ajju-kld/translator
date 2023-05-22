@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:translator/api/apis.dart';
+import 'package:translator/utils.dart';
+
 
 class Bottom_sheet extends StatefulWidget {
  final bool isDarkmode;
@@ -13,18 +16,7 @@ class Bottom_sheet extends StatefulWidget {
 class _Bottom_sheetState extends State<Bottom_sheet> {
   TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  List<String> _languages = [
-    'English',
-    'Spanish',
-    'French',
-    'German',
-    'Italian',
-    'Portuguese',
-    'Chinese',
-    'Japanese',
-    'Korean',
-    'Arabic',
-  ];
+  final List<String> _languages =languageCodes.keys.toList();
 
   @override
   void dispose() {
@@ -141,55 +133,11 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                             .toLowerCase()
                             .indexOf(_searchQuery.toLowerCase());
                         int endIndex = startIndex + _searchQuery.length;
-                        TextStyle highlightStyle = TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        );
+                       
 
                         return Padding(
                           padding: const EdgeInsets.all(10),
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            height: 65,
-                            child: Row(
-                              children: [
-                                const CircleAvatar(
-                                  child: Text('flag'),
-                                  radius: 30,
-                                ),
-                                const SizedBox(width: 10),
-                                RichText(
-                                  text: TextSpan(
-                                    text: language.substring(0, startIndex),
-                                    style: TextStyle(
-                                      color: widget.isDarkmode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                        text: language.substring(
-                                            startIndex, endIndex),
-                                        style: highlightStyle,
-                                      ),
-                                      TextSpan(
-                                        text: language.substring(endIndex),
-                                        style: TextStyle(
-                                          color: widget.isDarkmode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          child:Country_tile(language: language, startIndex: startIndex, endIndex: endIndex,is_dark: widget.isDarkmode,),
                         );
                       },
                     ),
@@ -234,5 +182,72 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
         ],
       ),
     );
+  }
+}
+
+class Country_tile extends StatelessWidget {
+  final String language;
+  final int startIndex;
+  final int endIndex;
+  final bool is_dark;
+  const Country_tile({super.key,required this.language,required this.is_dark,required this.startIndex,required this.endIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    final url=getFlagUrl(language);
+    return  Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            height: 65,
+                            child: Row(
+                              children: [ 
+                                 FutureBuilder<String?>(
+                future: url,
+                builder: (context, snapshot) {
+                  final image_url = snapshot.hasData && snapshot.data != null
+                      ? snapshot.data!
+                      : 'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg';
+
+                  return CircleAvatar(radius: 35,
+                    backgroundImage: NetworkImage(image_url),
+                    child: null,
+                  );
+              
+                }),
+                                const SizedBox(width: 10),
+                                RichText(
+                                  text: TextSpan(
+                                    text: language.substring(0, startIndex),
+                                    style: TextStyle(
+                                      color: is_dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: language.substring(
+                                            startIndex, endIndex),
+                                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ) ,
+                                      ),
+                                      TextSpan(
+                                        text: language.substring(endIndex),
+                                        style: TextStyle(
+                                          color: is_dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
   }
 }

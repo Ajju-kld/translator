@@ -1,12 +1,12 @@
 
-import 'dart:convert';
-import 'dart:ui';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:translator/utils.dart';
 import 'package:translator/widgets/Bottom.dart';
 import 'package:translator/widgets/InputField.dart';
 import 'package:translator/widgets/LanguageButton.dart';
+
+import '../api/apis.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,40 +52,6 @@ isScrollControlled: true,
 
 
 
-Future<Map<String, dynamic>> makeGetRequest() async {
-  final url = Uri.parse(
-        "https://google-translate1.p.rapidapi.com/language/translate/v2/languages");
-
-  final response = await http.get(
-    url,
-    headers: {
-      'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com',
-      'X-RapidAPI-Key': '677c89c5a8mshc83a40096e71157p113e61jsnb328a28b24a2',
-    },
-  );
-
-  if (response.statusCode == 200) {
- 
-   final data = jsonDecode(response.body) as Map<String, dynamic>;
-   print(data);
-
-// Access the nested 'languages' list
-      final languagesList = data['data']['languages'] as List<dynamic>;
-print(languagesList);
-// Iterate over the 'languages' list and extract the 'language' value from each element
-      final languageCodes = languagesList
-          .map((language) => language['language'] as String)
-          .toList();
-
-// Print the language codes
-      print(languageCodes);
-  }
-
-  // Return an empty dictionary if the response parsing fails or request fails
-  return {};
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,21 +66,30 @@ print(languagesList);
             child: Center(
               child: Column(
                 children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Text Translation',
-                        style: TextStyle(
-                            color: textColor,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w700),
-                      ),
-                   
-                   Switch(value: _isDarkmode, onChanged: (value){
-                    setState(() {
-                    _isDarkmode=value;   
-                    });
-                   }) ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 0, 10),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Text Translation',
+                          style: TextStyle(
+                              color: textColor,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w700),
+                        ),
+                     
+                     Row(
+                       children: [const Icon(Icons.sunny),
+
+                         Switch(activeColor: Colors.orange,value: _isDarkmode, onChanged: (value){
+                          setState(() {
+                          _isDarkmode=value;   
+                          });
+                         }),
+                       const Icon(Icons.dark_mode_outlined)
+                       ],
+                     ) ],
+                    ),
                   ),
                   Divider(
                     endIndent: 20,
@@ -130,7 +105,7 @@ print(languagesList);
                         GestureDetector(
                           onTap: () {
                             show_bottom_sheet(context, false);
-                            makeGetRequest();
+                            // makeGetRequest();
                           },
                           child: LanguageButton(
                               language: fromLanguage, isDarkmode: _isDarkmode),

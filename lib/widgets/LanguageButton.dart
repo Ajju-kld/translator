@@ -2,6 +2,7 @@ import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:translator/api/apis.dart';
 
 import '../utils.dart';
 
@@ -15,7 +16,7 @@ class LanguageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final url = fetchCountryImageUrl(language);
+    final url = getFlagUrl(language);
     return Container(width: 160,height: 65,
    
       decoration: BoxDecoration(
@@ -24,22 +25,14 @@ class LanguageButton extends StatelessWidget {
 padding:const EdgeInsets.fromLTRB(10, 5, 0, 5),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 25,
-            child: FutureBuilder<String?>(
-                future: url,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data != null) {
-                    return Flag.fromString(language);
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else {
-                    return Image.network(
-                        'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg');
-                  }
-                }),
-          ),SizedBox(width: 10,)
+          FutureBuilder<String?>(
+              future: url,
+              builder: (context, snapshot) {
+               final image_url=snapshot.hasData&&snapshot.data!=null?snapshot.data!:'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg';
+
+return CircleAvatar(backgroundImage: NetworkImage(image_url),child:null,);
+
+              }),SizedBox(width: 10,)
           ,Text(
             language,
             style: TextStyle(
