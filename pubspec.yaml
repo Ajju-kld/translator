@@ -30,8 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http:
+  dio :
   fluttertoast:
+  http :
+
+
 
 
 

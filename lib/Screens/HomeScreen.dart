@@ -59,15 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void translate(String source) {
-    var to_language = languageCodes[toLanguage];
-    var from_language = languageCodes[fromLanguage];
-    var translate_text = translateText(source, to_language!, from_language!);
+  void translate(String source) async{
+    var translate_text = await translateText(source, languageCodes[toLanguage]!,languageCodes[fromLanguage]!);
 
     
    
       setState(() {
-        _toTranslate.text = translate_text.toString();
+ 
+        _toTranslate.text = translate_text!;
       });
    
   }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 const default_fromLanguage='English';
 const default_toLanguage='Spanish';
 
@@ -288,3 +286,4 @@ Map<String, String> languageCodes = {
   'Chinese (Traditional)': 'zh-TW',
   'Zulu': 'zu',
 };
+

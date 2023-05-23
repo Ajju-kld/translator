@@ -39,29 +39,29 @@ widget.translate(widget.text_editing_controller.text);
   Widget build(BuildContext context) {
     TextStyle counterStyle = TextStyle(
         color:
-            widget.is_dark ? Color.fromARGB(255, 112, 110, 110) : Colors.black,
+            widget.is_dark ? const Color.fromARGB(255, 112, 110, 110) : Colors.black,
         fontSize: 12);
 
-    Color _txtColor = widget.is_dark ? Colors.white : Colors.black;
+    Color txtColor = widget.is_dark ? Colors.white : Colors.black;
 
     return Container(
       width: 370,
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       height: 195,
       decoration: BoxDecoration(
-          color: widget.is_dark ? const Color.fromARGB(255, 31, 31, 32) : Color.fromARGB(255, 217, 216, 216),
+          color: widget.is_dark ? const Color.fromARGB(255, 31, 31, 32) : const Color.fromARGB(255, 217, 216, 216),
           borderRadius: BorderRadius.circular(18)),
       child: TextField(
         maxLength: 2000,
-        style: TextStyle(color: _txtColor,fontSize: 18),
+        style: TextStyle(color: txtColor,fontSize: 18),
         maxLines: 7,
         controller: widget.text_editing_controller,
         onChanged: (_) => _update_character(),
         enabled: !widget.is_disabled,
-        cursorColor: _txtColor,
+        cursorColor: txtColor,
         decoration: InputDecoration(
             hintText: widget.is_disabled ? '' : 'Type something here',
-            hintStyle: TextStyle(color: _txtColor),
+            hintStyle: TextStyle(color: txtColor),
             disabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.grey),
             ),
