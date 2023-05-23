@@ -30,9 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dio :
+  dio:
   fluttertoast:
-  http :
+  http:
+  cached_network_image: ^3.2.3
+  flutter_cache_manager:
 
 
 

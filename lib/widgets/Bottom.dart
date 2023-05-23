@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:translator/api/apis.dart';
 import 'package:translator/utils.dart';
 
@@ -27,35 +29,26 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    done=initializeLanguages();
-  check(done);
-   
-   
-  
- 
+    done = initializeLanguages();
+    check(done);
   }
 
-void check(param){
-   
- if(param==false){
-  setState(() {
-    done=true;
-      _languages = languageCodes.keys.toList();
-  });
+  void check(param) {
+    if (param == false) {
+      setState(() {
+        done = true;
+        _languages = languageCodes.keys.toList();
+      });
 
-  return;
- }
- return;
-}
-
-
-
+      return;
+    }
+    return;
+  }
 
   Future<bool> initializeLanguages() async {
     try {
-      final languageCode = await languages();
+        final languageCode = await languages();
       if (languageCode.isEmpty) {
-       
         return false;
       }
       final list = findKeysByValues(languageCodes, languageCode);
@@ -301,11 +294,27 @@ class Country_tile extends StatefulWidget {
 
 class _Country_tileState extends State<Country_tile> {
   bool is_selected = false;
+  static final customeCache_manager =
+      CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
+  String imageurl = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    assignImageUrl();
+    super.initState();
+  }
+
+  void assignImageUrl() async {
+    String? imageUrlFromFuture = await getFlagUrl(widget.language);
+    setState(() {
+      imageurl = imageUrlFromFuture!;
+    }); // Assigns an empty string if the value is null
+  }
 
   @override
   Widget build(BuildContext context) {
     Color txtColor = widget.is_dark ? Colors.white : Colors.black;
-    final url = getFlagUrl(widget.language);
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -328,19 +337,17 @@ class _Country_tileState extends State<Country_tile> {
         height: 65,
         child: Row(
           children: [
-            FutureBuilder<String?>(
-                future: url,
-                builder: (context, snapshot) {
-                  final imageUrl = snapshot.hasData && snapshot.data != null
-                      ? snapshot.data!
-                      : 'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg';
-
-                  return CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(imageUrl),
-                    child: null,
-                  );
-                }),
+            ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: imageurl,
+                cacheManager: customeCache_manager,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                width: 50, // Set your desired width
+                height: 50,
+                fit: BoxFit.cover, // Set your desired height
+              ),
+            ),
             const SizedBox(width: 10),
             RichText(
               text: TextSpan(

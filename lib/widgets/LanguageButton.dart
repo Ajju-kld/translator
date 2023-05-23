@@ -1,6 +1,8 @@
 
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import 'package:translator/api/apis.dart';
 
@@ -13,7 +15,8 @@ class LanguageButton extends StatelessWidget {
 
   const LanguageButton({super.key, required this.language, required this.isDarkmode});
   
-
+  static final customeCache_manager =
+      CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
   @override
   Widget build(BuildContext context) {
     final url = getFlagUrl(language);
@@ -30,7 +33,17 @@ padding:const EdgeInsets.fromLTRB(10, 5, 0, 5),
               builder: (context, snapshot) {
                final imageUrl=snapshot.hasData&&snapshot.data!=null?snapshot.data!:'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg';
 
-return CircleAvatar(backgroundImage: NetworkImage(imageUrl));
+return   ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    cacheManager: customeCache_manager,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    width: 40, // Set your desired width
+                    height: 40,
+                    fit: BoxFit.cover, // Set your desired height
+                  ),
+                );
 
               }),const SizedBox(width: 10,)
           ,Text(
