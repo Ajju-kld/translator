@@ -33,6 +33,12 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
     check(done);
   }
 
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
   void check(param) {
     if (param == false) {
       setState(() {
@@ -74,12 +80,6 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     List<String> filteredLanguages = _languages
         .where((language) => language.toLowerCase().contains(_searchQuery))
@@ -109,7 +109,7 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                   topRight: Radius.circular(16),
                 ),
                 color: widget.isDarkmode
-                    ? const Color.fromARGB(255, 20, 20, 21)
+                    ? Color.fromARGB(255, 30, 30, 31)
                     : Colors.white,
               ),
               height: MediaQuery.of(context).size.height * 1,
@@ -145,8 +145,13 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                             Icons.search,
                             color: specific,
                           ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:BorderSide(color:Colors.grey.shade500), 
+                          borderRadius: BorderRadius.circular(10)
+                          ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
+                              
                               color: widget.isDarkmode
                                   ? Colors.white
                                   : Colors.black,
@@ -297,20 +302,30 @@ class _Country_tileState extends State<Country_tile> {
   static final customeCache_manager =
       CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
   String imageurl = '';
+bool isMounted = false;
   @override
   void initState() {
     // TODO: implement initState
     assignImageUrl();
+    isMounted = true;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    isMounted=false;
+   super.dispose(); 
   }
 
   void assignImageUrl() async {
     String? imageUrlFromFuture = await getFlagUrl(widget.language);
+    if(isMounted){
     setState(() {
       imageurl = imageUrlFromFuture!;
     }); // Assigns an empty string if the value is null
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     Color txtColor = widget.is_dark ? Colors.white : Colors.black;
