@@ -35,6 +35,7 @@ dependencies:
   http:
   cached_network_image: ^3.2.3
   flutter_cache_manager:
+  flutter_advanced_networkimage_2: ^2.0.0
 
 
 
