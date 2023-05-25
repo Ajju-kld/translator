@@ -50,10 +50,9 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
     }
     return;
   }
-
   Future<bool> initializeLanguages() async {
     try {
-        final languageCode = await languages();
+      final languageCode = await languages();
       if (languageCode.isEmpty) {
         return false;
       }
@@ -105,8 +104,8 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
                 color: widget.isDarkmode
                     ? Color.fromARGB(255, 30, 30, 31)
@@ -258,9 +257,9 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                                     text: 'with the',
                                   ),
                                   TextSpan(
-                                    text: ' Letters ${_searchController.text} ',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    text: ' Letters  ${_searchController.text} ',
+                                    style:  TextStyle(
+                                      color:textColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
