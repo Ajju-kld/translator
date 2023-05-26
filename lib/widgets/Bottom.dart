@@ -1,10 +1,13 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:translator/api/apis.dart';
 import 'package:translator/utils.dart';
+
+import '../api/apis.dart';
 
 class Bottom_sheet extends StatefulWidget {
   final bool isDarkmode;
@@ -30,7 +33,7 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
     // TODO: implement initState
     super.initState();
     done = initializeLanguages();
-    check(done);
+
   }
 
 
@@ -39,17 +42,7 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
     _searchController.dispose();
     super.dispose();
   }
-  void check(param) {
-    if (param == false) {
-      setState(() {
-        done = true;
-        _languages = languageCodes.keys.toList();
-      });
 
-      return;
-    }
-    return;
-  }
   Future<bool> initializeLanguages() async {
     try {
       final languageCode = await languages();
@@ -108,7 +101,7 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                   topRight: Radius.circular(20),
                 ),
                 color: widget.isDarkmode
-                    ? Color.fromARGB(255, 30, 30, 31)
+                    ? const Color.fromARGB(255, 30, 30, 31)
                     : Colors.white,
               ),
               height: MediaQuery.of(context).size.height * 1,
@@ -296,16 +289,18 @@ class Country_tile extends StatefulWidget {
   State<Country_tile> createState() => _Country_tileState();
 }
 
+// ignore: camel_case_types
 class _Country_tileState extends State<Country_tile> {
   bool is_selected = false;
   static final customeCache_manager =
       CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
-  String imageurl = '';
+
+
 bool isMounted = false;
   @override
   void initState() {
-    // TODO: implement initState
-    assignImageUrl();
+
+ 
     isMounted = true;
     super.initState();
   }
@@ -317,18 +312,12 @@ bool isMounted = false;
    super.dispose(); 
   }
 
-  void assignImageUrl() async {
-    String? imageUrlFromFuture = await getFlagUrl(widget.language);
-    if(isMounted){
-    setState(() {
-      imageurl = imageUrlFromFuture!;
-    }); // Assigns an empty string if the value is null
-    }
-  }
+
   @override
   Widget build(BuildContext context) {
     Color txtColor = widget.is_dark ? Colors.white : Colors.black;
-
+    final country_code = language_to_country[languageCodes[widget.language]]!.toLowerCase();
+final url= 'https://flagcdn.com/w320/$country_code.png';
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -353,12 +342,14 @@ bool isMounted = false;
           children: [
             ClipOval(
               child: CachedNetworkImage(
-                imageUrl: imageurl,
+                imageUrl: url,
                 cacheManager: customeCache_manager,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
                 width: 50, // Set your desired width
                 height: 50,
+                key: UniqueKey(),
+                cacheKey: url,
                 fit: BoxFit.cover, // Set your desired height
               ),
             ),

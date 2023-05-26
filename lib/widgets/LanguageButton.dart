@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import 'package:translator/api/apis.dart';
+import 'package:translator/utils.dart';
 
 
 
@@ -19,7 +20,8 @@ class LanguageButton extends StatelessWidget {
       CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
   @override
   Widget build(BuildContext context) {
-    final url = getFlagUrl(language);
+     final countryCode = language_to_country[languageCodes[language]]!.toLowerCase();
+    final url='https://flagcdn.com/w320/$countryCode.png';
     return Container(width: 160,height: 65,
    
       decoration: BoxDecoration(
@@ -28,24 +30,21 @@ class LanguageButton extends StatelessWidget {
 padding:const EdgeInsets.fromLTRB(10, 5, 0, 5),
       child: Row(
         children: [
-          FutureBuilder<String?>(
-              future: url,
-              builder: (context, snapshot) {
-               final imageUrl=snapshot.hasData&&snapshot.data!=null?snapshot.data!:'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg';
-
-return   ClipOval(
+       ClipOval(
                   child: CachedNetworkImage(
-                    imageUrl: imageUrl,
+                    imageUrl: url,
+                    key: UniqueKey(),
+                    cacheKey: url,
                     cacheManager: customeCache_manager,
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                     width: 40, // Set your desired width
                     height: 40,
                     fit: BoxFit.cover, // Set your desired height
                   ),
-                );
+                )
 
-              }),const SizedBox(width: 10,)
+              ,const SizedBox(width: 10,)
           ,Text(
             language,
             style: TextStyle(
