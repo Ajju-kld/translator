@@ -1,8 +1,13 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:translator/api/apis.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:translator/utils.dart';
+
+import '../api/apis.dart';
 
 class Bottom_sheet extends StatefulWidget {
   final bool isDarkmode;
@@ -27,35 +32,21 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    done=initializeLanguages();
-  check(done);
-   
-   
-  
- 
+    done = initializeLanguages();
+
   }
 
-void check(param){
-   
- if(param==false){
-  setState(() {
-    done=true;
-      _languages = languageCodes.keys.toList();
-  });
 
-  return;
- }
- return;
-}
-
-
-
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   Future<bool> initializeLanguages() async {
     try {
       final languageCode = await languages();
       if (languageCode.isEmpty) {
-       
         return false;
       }
       final list = findKeysByValues(languageCodes, languageCode);
@@ -78,12 +69,6 @@ void check(param){
       }
       return '';
     }).toList();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 
   @override
@@ -112,11 +97,11 @@ void check(param){
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
                 color: widget.isDarkmode
-                    ? const Color.fromARGB(255, 20, 20, 21)
+                    ? const Color.fromARGB(255, 30, 30, 31)
                     : Colors.white,
               ),
               height: MediaQuery.of(context).size.height * 1,
@@ -152,8 +137,13 @@ void check(param){
                             Icons.search,
                             color: specific,
                           ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:BorderSide(color:Colors.grey.shade500), 
+                          borderRadius: BorderRadius.circular(10)
+                          ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
+                              
                               color: widget.isDarkmode
                                   ? Colors.white
                                   : Colors.black,
@@ -260,9 +250,9 @@ void check(param){
                                     text: 'with the',
                                   ),
                                   TextSpan(
-                                    text: ' Letters ${_searchController.text} ',
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    text: ' Letters  ${_searchController.text} ',
+                                    style:  TextStyle(
+                                      color:textColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -299,13 +289,35 @@ class Country_tile extends StatefulWidget {
   State<Country_tile> createState() => _Country_tileState();
 }
 
+// ignore: camel_case_types
 class _Country_tileState extends State<Country_tile> {
   bool is_selected = false;
+  static final customeCache_manager =
+      CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
+
+
+bool isMounted = false;
+  @override
+  void initState() {
+
+ 
+    isMounted = true;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    isMounted=false;
+   super.dispose(); 
+  }
+
 
   @override
   Widget build(BuildContext context) {
     Color txtColor = widget.is_dark ? Colors.white : Colors.black;
-    final url = getFlagUrl(widget.language);
+    final country_code = language_to_country[languageCodes[widget.language]]!.toLowerCase();
+final url= 'https://flagcdn.com/w320/$country_code.png';
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -328,19 +340,19 @@ class _Country_tileState extends State<Country_tile> {
         height: 65,
         child: Row(
           children: [
-            FutureBuilder<String?>(
-                future: url,
-                builder: (context, snapshot) {
-                  final imageUrl = snapshot.hasData && snapshot.data != null
-                      ? snapshot.data!
-                      : 'https://icon-library.com/images/milestone-icon/milestone-icon-21.jpg';
-
-                  return CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(imageUrl),
-                    child: null,
-                  );
-                }),
+            ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: url,
+                cacheManager: customeCache_manager,
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                width: 50, // Set your desired width
+                height: 50,
+                key: UniqueKey(),
+                cacheKey: url,
+                fit: BoxFit.cover, // Set your desired height
+              ),
+            ),
             const SizedBox(width: 10),
             RichText(
               text: TextSpan(

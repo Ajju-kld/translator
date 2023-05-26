@@ -31,15 +31,15 @@ class _InputFieldState extends State<InputField> {
       count = widget.text_editing_controller.text.length;
       print(count);
     });
-widget.translate(widget.text_editing_controller.text);
-  
+    widget.translate(widget.text_editing_controller.text);
   }
 
   @override
   Widget build(BuildContext context) {
     TextStyle counterStyle = TextStyle(
-        color:
-            widget.is_dark ? const Color.fromARGB(255, 112, 110, 110) : Colors.black,
+        color: widget.is_dark
+            ? const Color.fromARGB(255, 112, 110, 110)
+            : Colors.black,
         fontSize: 12);
 
     Color txtColor = widget.is_dark ? Colors.white : Colors.black;
@@ -49,32 +49,34 @@ widget.translate(widget.text_editing_controller.text);
       padding: const EdgeInsets.all(12),
       height: 195,
       decoration: BoxDecoration(
-          color: widget.is_dark ? const Color.fromARGB(255, 31, 31, 32) : const Color.fromARGB(255, 217, 216, 216),
+          color: widget.is_dark
+              ? const Color.fromARGB(255, 31, 31, 32)
+              : const Color.fromARGB(255, 217, 216, 216),
           borderRadius: BorderRadius.circular(18)),
       child: TextField(
         maxLength: 2000,
-        style: TextStyle(color: txtColor,fontSize: 18),
+        style: TextStyle(color: txtColor, fontSize: 18),
         maxLines: 7,
         controller: widget.text_editing_controller,
         onChanged: (_) => _update_character(),
         enabled: !widget.is_disabled,
         cursorColor: txtColor,
         decoration: InputDecoration(
-            hintText: widget.is_disabled ? '' : 'Type something here',
-            hintStyle: TextStyle(color: txtColor),
-            disabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-            enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-            counter: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  '$count/2000',
-                  style: counterStyle,
-                )),
-           ),
+          hintText: widget.is_disabled ? '' : 'Type something here',
+          hintStyle: TextStyle(color: txtColor),
+          disabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          counter: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                '$count/2000',
+                style: counterStyle,
+              )),
+        ),
       ),
     );
   }

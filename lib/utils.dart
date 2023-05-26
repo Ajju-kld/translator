@@ -148,7 +148,6 @@ Map<String, String> language_to_country = {
 
 
 
-
 Map<String, String> languageCodes = {
   'Afrikaans': 'af',
   'Akan': 'ak',
@@ -204,7 +203,7 @@ Map<String, String> languageCodes = {
   'Iloko': 'ilo',
   'Icelandic': 'is',
   'Italian': 'it',
- 
+  'Hebrew(Old iso)': 'iw',
   'Japanese': 'ja',
   'Javanese': 'jv',
   'Georgian': 'ka',
@@ -286,4 +285,3 @@ Map<String, String> languageCodes = {
   'Chinese (Traditional)': 'zh-TW',
   'Zulu': 'zu',
 };
-

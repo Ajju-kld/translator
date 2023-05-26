@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'package:translator/utils.dart';
+
 
 
 Future<List<String>> languages() async {
@@ -28,28 +28,11 @@ Future<List<String>> languages() async {
         .map((language) => language['language'] as String)
         .toList();
 
-    return Future.delayed(Duration(seconds: 1), () => languageCodes);
+    return Future.delayed(const Duration(seconds: 1), () => languageCodes);
   }
   // Return an empty dictionary if the response parsing fails or request fails
   return [];
 }
-
-
-
-Future<String?> getFlagUrl(String language) async {
-  final countryCode = language_to_country[languageCodes[language]];
-  final response = await http
-      .get(Uri.parse('https://restcountries.com/v3.1/alpha/$countryCode'));
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    final country_flag = data[0]['flags']['png'];
-    print(country_flag);
-    return country_flag.toString();
-  }
-  return null;
-} 
-
-
 
 Future<String?> translateText(
     String text, String toLanguage, String fromLanguage) async {
