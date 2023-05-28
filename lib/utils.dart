@@ -7,7 +7,7 @@ const default_toLanguage='Spanish';
 
 
 Map<String, String> languageToCountry = {
-  'af': 'AF',
+  'af': 'ZA',
   'ak': 'GH',
   'am': 'ET',
   'ar': 'SA',

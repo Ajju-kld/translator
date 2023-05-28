@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:texttranslator/Screens/Splash.dart';
 
 import 'Screens/HomeScreen.dart';
 
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
    
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
