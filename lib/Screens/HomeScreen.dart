@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:translator/utils.dart';
-import 'package:translator/widgets/Bottom.dart';
-import 'package:translator/widgets/InputField.dart';
-import 'package:translator/widgets/LanguageButton.dart';
-
-import '../api/apis.dart';
+import 'package:translator/translator.dart';
+import '../utils.dart';
+import '../widgets/Bottom.dart';
+import '../widgets/InputField.dart';
+import '../widgets/LanguageButton.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String toLanguage = default_toLanguage;
   final _fromTranslate = TextEditingController();
   final _toTranslate = TextEditingController();
+  final GoogleTranslator translator = GoogleTranslator();
 
   void update_from_language(String language) {
     setState(() {
@@ -48,10 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-   backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Bottom_sheet(
+        return Bottomsheet(
             isDarkmode: _isDarkmode,
             to_from: to_from,
             onPressed: onLanguageChanged);
@@ -59,29 +59,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void translate(String source) async{
-    var translate_text = await translateText(source, languageCodes[toLanguage]!,languageCodes[fromLanguage]!);
+  void translate(String source) async {
+    // var translate_text = await translateText(source, languageCodes[toLanguage]!,languageCodes[fromLanguage]!);
+    var translateText = await translator.translate(source,
+        to: languageCodes[toLanguage]!, from: languageCodes[fromLanguage]!);
 
-    
-   
-      setState(() {
- 
-        _toTranslate.text = translate_text!;
-      });
-   
+    setState(() {
+      _toTranslate.text = translateText.toString();
+    });
   }
 
-
-void _exchange(){
-String temp= fromLanguage;
-setState(() {
-  fromLanguage=toLanguage;
-  toLanguage=temp;
-});
-
-}
-
-
+  void _exchange() {
+    String temp = fromLanguage;
+    setState(() {
+      fromLanguage = toLanguage;
+      toLanguage = temp;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,59 +84,52 @@ setState(() {
         _isDarkmode ? Color.fromARGB(255, 15, 15, 15) : Colors.white;
 
     return GestureDetector(
-      onTap: (){
-           FocusScope.of(context).unfocus();
+      onTap: () {
+        FocusScope.of(context).unfocus();
       },
       child: Scaffold(
           backgroundColor: backgroundColor,
+          appBar: AppBar(
+            backgroundColor: backgroundColor,
+            elevation: 5,
+            shadowColor: _isDarkmode
+                ?const Color.fromARGB(255, 118, 118, 119)
+                : const Color.fromARGB(255, 199, 198, 198),
+            title: Text(
+              'Text Translation',
+              style: TextStyle(
+                  color: textColor, fontSize: 24, fontWeight: FontWeight.w700),
+            ),
+            actions: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.sunny,
+                    color: textColor,
+                  ),
+                  Switch(
+                      activeColor: Colors.orange,
+                      value: _isDarkmode,
+                      onChanged: (value) {
+                        setState(() {
+                          _isDarkmode = value;
+                        });
+                      }),
+                  Icon(
+                    Icons.dark_mode_outlined,
+                    color: textColor,
+                  )
+                ],
+              )
+            ],
+          ),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Center(
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 0, 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Text Translation',
-                            style: TextStyle(
-                                color: textColor,
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.sunny,
-                                color: textColor,
-                              ),
-                              Switch(
-                                  activeColor: Colors.orange,
-                                  value: _isDarkmode,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _isDarkmode = value;
-                                    });
-                                  }),
-                              Icon(
-                                Icons.dark_mode_outlined,
-                                color: textColor,
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      endIndent: 20,
-                      indent: 20,
-                      thickness: 2,
-                      color: _isDarkmode ? Colors.grey : Colors.black,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 30),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -153,7 +140,8 @@ setState(() {
                               // makeGetRequest();
                             },
                             child: LanguageButton(
-                                language: fromLanguage, isDarkmode: _isDarkmode),
+                                language: fromLanguage,
+                                isDarkmode: _isDarkmode),
                           ),
                           IconButton(
                             onPressed: () => _exchange(),
@@ -202,7 +190,7 @@ setState(() {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: InputField(
-                        text_editing_controller: _fromTranslate,
+                        textEditingController: _fromTranslate,
                         is_disabled: false,
                         is_dark: _isDarkmode,
                         translate: translate,
@@ -238,7 +226,7 @@ setState(() {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: InputField(
-                        text_editing_controller: _toTranslate,
+                        textEditingController: _toTranslate,
                         is_disabled: true,
                         is_dark: _isDarkmode,
                         translate: (p0) {},

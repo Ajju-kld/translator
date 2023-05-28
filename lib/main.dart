@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:translator/Screens/HomeScreen.dart';
+import 'Screens/HomeScreen.dart';
+
+
 
 Future<void> main() async{
  WidgetsFlutterBinding.ensureInitialized();

@@ -4,8 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+import '../utils.dart';
 
-import 'package:translator/utils.dart';
+
+
 
 
 
@@ -16,11 +18,11 @@ class LanguageButton extends StatelessWidget {
 
   const LanguageButton({super.key, required this.language, required this.isDarkmode});
   
-  static final customeCache_manager =
+  static final cutomeCachemanager =
       CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
   @override
   Widget build(BuildContext context) {
-     final countryCode = language_to_country[languageCodes[language]]!.toLowerCase();
+     final countryCode = languageToCountry[languageCodes[language]]!.toLowerCase();
     final url='https://flagcdn.com/w320/$countryCode.png';
     return Container(width: 160,height: 65,
    
@@ -35,7 +37,7 @@ padding:const EdgeInsets.fromLTRB(10, 5, 0, 5),
                     imageUrl: url,
                     key: UniqueKey(),
                     cacheKey: url,
-                    cacheManager: customeCache_manager,
+                    cacheManager: cutomeCachemanager,
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                     width: 40, // Set your desired width

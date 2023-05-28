@@ -5,37 +5,35 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:translator/utils.dart';
 
-import '../api/apis.dart';
+import '../utils.dart';
 
-class Bottom_sheet extends StatefulWidget {
+
+class Bottomsheet extends StatefulWidget {
   final bool isDarkmode;
   final bool to_from;
   final Function(String) onPressed;
-  const Bottom_sheet(
+  const Bottomsheet(
       {super.key,
       required this.isDarkmode,
       required this.to_from,
       required this.onPressed});
 
   @override
-  State<Bottom_sheet> createState() => _Bottom_sheetState();
+  State<Bottomsheet> createState() => _BottomsheetState();
 }
 
-class _Bottom_sheetState extends State<Bottom_sheet> {
+class _BottomsheetState extends State<Bottomsheet> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   List<String> _languages = [];
-  var done;
+ late final bool  done;
   @override
   void initState() {
-    // TODO: implement initState
+ 
     super.initState();
     done = initializeLanguages();
-
   }
-
 
   @override
   void dispose() {
@@ -43,21 +41,14 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
     super.dispose();
   }
 
-  Future<bool> initializeLanguages() async {
-    try {
-      final languageCode = await languages();
-      if (languageCode.isEmpty) {
-        return false;
-      }
-      final list = findKeysByValues(languageCodes, languageCode);
-
+  bool initializeLanguages()  {
+    
       setState(() {
-        _languages = list;
+        _languages = languageCodes.keys.toList();
       });
+  
       return true;
-    } catch (e) {
-      return false;
-    }
+   
   }
 
   List<String> findKeysByValues(Map<String, String> map, List<String> values) {
@@ -86,8 +77,8 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
         children: [
           BackdropFilter(
             filter: ImageFilter.blur(
-              sigmaX: 5.0,
-              sigmaY: 5.0,
+              sigmaX: 10.0,
+              sigmaY: 10.0,
             ),
             child: Container(
               color: Colors.black.withOpacity(0),
@@ -96,14 +87,15 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
           ClipRect(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                color: widget.isDarkmode
-                    ? const Color.fromARGB(255, 30, 30, 31)
-                    : Colors.white,
-              ),
+                 
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  color: widget.isDarkmode
+                      ? const Color.fromARGB(255, 30, 30, 31)
+                      : const Color.fromARGB(255, 219, 219, 220),
+                  border: Border.all(color: Colors.black,width: 2)),
               height: MediaQuery.of(context).size.height * 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,12 +130,11 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                             color: specific,
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide:BorderSide(color:Colors.grey.shade500), 
-                          borderRadius: BorderRadius.circular(10)
-                          ),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade500),
+                              borderRadius: BorderRadius.circular(10)),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              
                               color: widget.isDarkmode
                                   ? Colors.white
                                   : Colors.black,
@@ -191,11 +182,7 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                         overscroll.disallowIndicator();
                         return false;
                       },
-                      child: FutureBuilder(
-                          future: done,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data == true) {
-                              return ListView.builder(
+                      child:  ListView.builder(
                                 itemCount: filteredLanguages.length,
                                 itemBuilder: (context, index) {
                                   String language = filteredLanguages[index];
@@ -215,14 +202,9 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                                         onPressed: widget.onPressed),
                                   );
                                 },
-                              );
-                            } else {
-                              return Center(
-                                  child: Container(
-                                child: const CircularProgressIndicator(),
-                              ));
-                            }
-                          }),
+                              )
+                            
+                          
                     ),
                   ),
                   Center(
@@ -250,9 +232,10 @@ class _Bottom_sheetState extends State<Bottom_sheet> {
                                     text: 'with the',
                                   ),
                                   TextSpan(
-                                    text: ' Letters  ${_searchController.text} ',
-                                    style:  TextStyle(
-                                      color:textColor,
+                                    text:
+                                        ' Letters  ${_searchController.text} ',
+                                    style: TextStyle(
+                                      color: textColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -295,12 +278,9 @@ class _Country_tileState extends State<Country_tile> {
   static final customeCache_manager =
       CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
 
-
-bool isMounted = false;
+  bool isMounted = false;
   @override
   void initState() {
-
- 
     isMounted = true;
     super.initState();
   }
@@ -308,16 +288,16 @@ bool isMounted = false;
   @override
   void dispose() {
     // TODO: implement dispose
-    isMounted=false;
-   super.dispose(); 
+    isMounted = false;
+    super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     Color txtColor = widget.is_dark ? Colors.white : Colors.black;
-    final country_code = language_to_country[languageCodes[widget.language]]!.toLowerCase();
-final url= 'https://flagcdn.com/w320/$country_code.png';
+    final country_code =
+        languageToCountry[languageCodes[widget.language]]!.toLowerCase();
+    final url = 'https://flagcdn.com/w320/$country_code.png';
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -334,7 +314,7 @@ final url= 'https://flagcdn.com/w320/$country_code.png';
               ? Colors.orange
               : (widget.is_dark)
                   ? const Color.fromARGB(255, 0, 0, 0)
-                  : const Color.fromARGB(255, 219, 219, 220),
+                  : const Color.fromARGB(255, 255, 255, 255),
           borderRadius: BorderRadius.circular(16),
         ),
         height: 65,
@@ -344,7 +324,8 @@ final url= 'https://flagcdn.com/w320/$country_code.png';
               child: CachedNetworkImage(
                 imageUrl: url,
                 cacheManager: customeCache_manager,
-                placeholder: (context, url) => const CircularProgressIndicator(),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 width: 50, // Set your desired width
                 height: 50,
