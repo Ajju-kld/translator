@@ -191,8 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: InputField(
                         textEditingController: _fromTranslate,
-                        is_disabled: false,
-                        is_dark: _isDarkmode,
+                        isDisabled: false,
+                        isDark: _isDarkmode,
                         translate: translate,
                       ),
                     ),
@@ -227,9 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: InputField(
                         textEditingController: _toTranslate,
-                        is_disabled: true,
-                        is_dark: _isDarkmode,
-                        translate: (p0) {},
+                        isDisabled: true,
+                        isDark: _isDarkmode,
+                        translate:translate,
                       ),
                     ),
                   ],

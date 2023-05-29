@@ -25,8 +25,9 @@ class LanguageButton extends StatelessWidget {
      final countryCode = languageToCountry[languageCodes[language]]!.toLowerCase();
     final url='https://flagcdn.com/w320/$countryCode.png';
     return Container(width: 160,height: 65,
-   
+   clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
+        
         color: isDarkmode ? const Color.fromARGB(255, 31, 31, 32) : const Color.fromARGB(255, 195, 192, 192),
       borderRadius: BorderRadius.circular(12)),
 padding:const EdgeInsets.fromLTRB(10, 5, 0, 5),
@@ -48,7 +49,8 @@ padding:const EdgeInsets.fromLTRB(10, 5, 0, 5),
 
               ,const SizedBox(width: 10,)
           ,Text(
-            language,
+            language,overflow: TextOverflow.clip,
+            
             style: TextStyle(
                 color: isDarkmode ? Colors.white : Colors.black, fontSize: 16),
           ),

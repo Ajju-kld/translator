@@ -118,7 +118,7 @@ class _BottomsheetState extends State<Bottomsheet> {
                         controller: _searchController,
                         onChanged: (value) {
                           setState(() {
-                            _searchQuery = value;
+                            _searchQuery = value.toLowerCase();
                           });
                         },
                         style: TextStyle(color: textColor),
@@ -194,7 +194,7 @@ class _BottomsheetState extends State<Bottomsheet> {
 
                                   return Padding(
                                     padding: const EdgeInsets.all(10),
-                                    child: Country_tile(
+                                    child: CountryTile(
                                         language: language,
                                         startIndex: startIndex,
                                         endIndex: endIndex,
@@ -254,13 +254,13 @@ class _BottomsheetState extends State<Bottomsheet> {
   }
 }
 
-class Country_tile extends StatefulWidget {
+class CountryTile extends StatefulWidget {
   final String language;
   final int startIndex;
   final int endIndex;
   final Function(String) onPressed;
   final bool is_dark;
-  const Country_tile(
+  const CountryTile(
       {super.key,
       required this.onPressed,
       required this.language,
@@ -269,11 +269,11 @@ class Country_tile extends StatefulWidget {
       required this.endIndex});
 
   @override
-  State<Country_tile> createState() => _Country_tileState();
+  State<CountryTile> createState() => _CountryTileState();
 }
 
 // ignore: camel_case_types
-class _Country_tileState extends State<Country_tile> {
+class _CountryTileState extends State<CountryTile> {
   bool is_selected = false;
   static final customeCache_manager =
       CacheManager(Config('cacheKey', stalePeriod: const Duration(days: 10)));
@@ -287,7 +287,7 @@ class _Country_tileState extends State<Country_tile> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+
     isMounted = false;
     super.dispose();
   }
