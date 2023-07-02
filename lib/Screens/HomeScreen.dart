@@ -82,7 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Color textColor = _isDarkmode ? Colors.white : Colors.black;
     Color backgroundColor =
         _isDarkmode ? Color.fromARGB(255, 15, 15, 15) : Colors.white;
-
+final screenSize = MediaQuery.of(context).size;
+    final screenWidth = screenSize.width;
+    final screenHeight = screenSize.height;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -133,15 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              show_bottom_sheet(
-                                  context, false, update_from_language);
-                              // makeGetRequest();
-                            },
-                            child: LanguageButton(
-                                language: fromLanguage,
-                                isDarkmode: _isDarkmode),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                show_bottom_sheet(
+                                    context, false, update_from_language);
+                                // makeGetRequest();
+                              },
+                              child: LanguageButton(
+                                  language: fromLanguage,
+                                  isDarkmode: _isDarkmode),
+                            ),
                           ),
                           IconButton(
                             onPressed: () => _exchange(),
@@ -151,11 +155,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               size: 30,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => show_bottom_sheet(
-                                context, true, update_to_language),
-                            child: LanguageButton(
-                                language: toLanguage, isDarkmode: _isDarkmode),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => show_bottom_sheet(
+                                  context, true, update_to_language),
+                              child: LanguageButton(
+                                  language: toLanguage, isDarkmode: _isDarkmode),
+                            ),
                           ),
                         ],
                       ),
@@ -189,11 +195,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: InputField(
-                        textEditingController: _fromTranslate,
-                        isDisabled: false,
-                        isDark: _isDarkmode,
-                        translate: translate,
+                      child: AspectRatio(
+                        aspectRatio: screenHeight/screenWidth,
+                        child: InputField(
+                          textEditingController: _fromTranslate,
+                          isDisabled: false,
+                          isDark: _isDarkmode,
+                          translate: translate,
+                        ),
                       ),
                     ),
                     Padding(
@@ -225,11 +234,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: InputField(
-                        textEditingController: _toTranslate,
-                        isDisabled: true,
-                        isDark: _isDarkmode,
-                        translate:translate,
+                      child: AspectRatio(
+                        aspectRatio: screenHeight/screenWidth,
+                        child: InputField(
+                          textEditingController: _toTranslate,
+                          isDisabled: true,
+                          isDark: _isDarkmode,
+                          translate:translate,
+                        ),
                       ),
                     ),
                   ],
